@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
-from sugarrush import __version__
+from glycomass import __version__
 
 setup(
-  name = 'sugarrush',
+  name = 'glycomass',
   packages = find_packages(),
   include_package_data=True,
   version = __version__,

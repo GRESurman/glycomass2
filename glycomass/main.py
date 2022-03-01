@@ -1,6 +1,6 @@
-from sugarrush.mass_list import load_mass_list
-from sugarrush.process_data import process_folder
-from sugarrush.clustering import cluster
+from glycomass.mass_list import load_mass_list
+from glycomass.process_data import process_folder
+from glycomass.clustering import cluster
 from pathlib import Path
 
 mass_list = load_mass_list()

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from sugarrush.well_replacement import well_convert
+from glycomass.well_replacement import well_convert
 
 def load_data(filepath):
     dict_of_dfs = pd.read_excel(filepath,
@@ -64,7 +64,7 @@ def process_folder(folder_path, mass_list, remove_prefix='', convert_well_names=
 
 
 if __name__ == '__main__':
-    from sugarrush.mass_list import load_mass_list
+    from glycomass.mass_list import load_mass_list
 
     mass_list = load_mass_list()
     filepath = str(Path(__file__).parents[0]) + '/data/test_data.xlsx'
