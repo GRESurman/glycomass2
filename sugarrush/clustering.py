@@ -5,23 +5,18 @@ from bokeh.models import ColumnDataSource
 from bokeh.transform import factor_cmap
 from bokeh import plotting
 
-def cluster(df, mass_list, distance_threshold=0.1):
-    train_cols = list(mass_list.keys())
-    train_data = df[train_cols]
-
-    agglo = AgglomerativeClustering(distance_threshold=distance_threshold, n_clusters=None)
+def cluster(df, cols, distance_threshold=0.2, linkage='ward'):
+    train_data = df[cols]
+    agglo = AgglomerativeClustering(distance_threshold=distance_threshold, n_clusters=None, linkage=linkage)
     agglo.fit(train_data)
-    labels = agglo.labels_
-    labels = [str(l) for l in labels]
-    df['labels'] = labels
+    df['labels'] = [str(l) for l in agglo.labels_]
     print(f"{len(df['labels'].unique())} clusters at distance {distance_threshold}")
     return df
 
-def pca(df, mass_list):
-    train_cols = list(mass_list.keys())
-    train_data = df[train_cols]
+def pca(df, cols):
+    train_data = df[cols]
     pca = PCA(n_components=2)
-    crds = pca.fit_transform(train_data )
+    crds = pca.fit_transform(train_data)
     pca_df = pd.DataFrame(crds, columns=["x", "y"])
     df[['x', 'y']] = pca_df[['x', 'y']]
     return df
@@ -41,21 +36,17 @@ def plot(df, title="PCA with clustering"):
 if __name__ == '__main__':
     from pathlib import Path
     from sugarrush.mass_list import load_mass_list
-    from sugarrush.process_data import process_data
-    from bokeh.plotting import output_file, save
+    from sugarrush.process_data import process_data, process_folder
 
-    # load and process
     mass_list = load_mass_list()
-    filepath = str(Path(__file__).parents[0]) + '/data/test_data.xlsx'
-    df = process_data(filepath, mass_list)
+    folder_path = str(Path(__file__).parents[1]) + '/data/01Mar22'
+    cols = list(mass_list.keys())  # ['1', '2', '3', '4', '5', '6', '7', '8']
+    distance_threshold = 0.2
+    linkage = 'ward'
 
-    # cluster and plot
-    distance_threshold = 0.05
-    df = cluster(df, mass_list, distance_threshold=distance_threshold)
-    df = pca(df, mass_list)
-    p = plot(df, title=f"PCA with clustering at distance {distance_threshold}")
+    prefix = ""
+    df = process_folder(folder_path, mass_list, remove_prefix=prefix)
+    df = cluster(df, cols, distance_threshold=distance_threshold, linkage=linkage)
 
-    # output plot to html file
-    output_file(str(Path(__file__).parents[0]) + '/data/test_plot.html')
-    save(p)
-
+    Path(f"{folder_path}/result").mkdir(parents=True, exist_ok=True)
+    df.to_excel(f"{folder_path}/result/processed_results.xlsx")

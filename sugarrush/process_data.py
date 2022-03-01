@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from pathlib import Path
+from sugarrush.well_replacement import well_convert
 
 def load_data(filepath):
     dict_of_dfs = pd.read_excel(filepath,
@@ -28,12 +30,15 @@ def get_intensity_ratios(intensity_dict, round_to=4):
 
     return ratio_intensity_dict
 
-def process_data(filepath, mass_list):
+def process_data(filepath, mass_list, remove_prefix='', convert_well_names=True):
     dict_of_dfs = load_data(filepath)
     list_results_dicts = []
     for name, df in dict_of_dfs.items():
         intensity_dict = get_intensities(df, mass_list)
         ratio_intensity_dict = get_intensity_ratios(intensity_dict)
+        name = name.replace(remove_prefix, '')
+        if convert_well_names is True:
+            name = well_convert(name)
         ratio_intensity_dict['name'] = name
         list_results_dicts.append(ratio_intensity_dict)
 
@@ -45,18 +50,34 @@ def process_data(filepath, mass_list):
     final_df = final_df[cols]
     return final_df
 
+def process_folder(folder_path, mass_list, remove_prefix='', convert_well_names=True):
 
+    pathlist = Path(folder_path).glob('*.xlsx')
+    list_dfs = []
+    for filepath in pathlist:
+        df = process_data(filepath, mass_list, remove_prefix=remove_prefix, convert_well_names=convert_well_names)
+        list_dfs.append(df)
+
+    final_df = pd.concat(list_dfs)
+    final_df = final_df.reindex()
+    return final_df
 
 
 if __name__ == '__main__':
-    from pathlib import Path
     from sugarrush.mass_list import load_mass_list
 
     mass_list = load_mass_list()
     filepath = str(Path(__file__).parents[0]) + '/data/test_data.xlsx'
-    df = process_data(filepath, mass_list)
+    prefix = "Itag_assay_spot_"
+    df = process_data(filepath, mass_list, remove_prefix=prefix)
 
     # save and print the test
     print(df.head())
     df.to_excel(str(Path(__file__).parents[0]) + '/data/test_results.xlsx')
 
+
+    folder_path =  str(Path(__file__).parents[0]) + '/data/test_run'
+    df = process_folder(folder_path, mass_list)
+    print(df.head())
+    Path(str(Path(__file__).parents[0]) + '/data/test_run/result').mkdir(parents=True, exist_ok=True)
+    df.to_excel(str(Path(__file__).parents[0]) + '/data/test_run/result/test_results.xlsx')

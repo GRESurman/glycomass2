@@ -1,10 +1,10 @@
 import pandas as pd
 from pathlib import Path
 
-data_folder = str(Path(__file__).parents[0]) + '/data'
+default_mass_list = f'{str(Path(__file__).parents[0])}/mass_list.xlsx'
 
-def load_mass_list(filename='mass_list.xlsx'):
-    df = pd.read_excel(f'{data_folder}/{filename}')
+def load_mass_list(filename=default_mass_list):
+    df = pd.read_excel(filename)
     mass_list = {}
     for index, row in df.iterrows():
         mass_list[str(row['dp'])] = [row['low'], row['high']]
