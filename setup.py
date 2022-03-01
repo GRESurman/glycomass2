@@ -1,6 +1,9 @@
 from setuptools import setup, find_packages
 from glycomass import __version__
 
+with open('requirements.txt') as f:
+  requirements = f.read().splitlines()
+
 setup(
   name = 'glycomass',
   packages = find_packages(),
@@ -13,6 +16,7 @@ setup(
   url = '',
   download_url = '',
   keywords = ['sugar'],
+  install_requires=requirements,
   classifiers=[
     'Development Status :: 3 - Alpha',
     'License :: OSI Approved :: MIT License',
