@@ -15,7 +15,7 @@ if __name__ == '__main__':
     from glycomass.process_data import process_data, process_folder
 
     mass_list = load_mass_list()
-    folder_path = str(Path(__file__).parents[1]) + '/data/01Mar22'
+    folder_path = str(Path(__file__).parents[1]) + '/data/16Mar22'
     cols = list(mass_list.keys())  # ['1', '2', '3', '4', '5', '6', '7', '8']
     distance_threshold = 0.2
     linkage = 'ward'

@@ -23,12 +23,14 @@ def get_intensities(df, mass_list, mz_col='m/z', int_col='Intens.'):
 
 def get_intensity_ratios(intensity_dict, round_to=4):
     sum_intensity = sum(list(intensity_dict.values()))
-
     ratio_intensity_dict = {}
     for key, value in intensity_dict.items():
         ratio_intensity_dict[key] = round(value/sum_intensity, round_to)
 
+    ratio_intensity_dict['sum_1_2_3'] = round(sum([ratio_intensity_dict['1'], ratio_intensity_dict['2'], ratio_intensity_dict['3']]), round_to)
+    ratio_intensity_dict['5:3'] = round(ratio_intensity_dict['5'] / ratio_intensity_dict['3'], round_to)
     return ratio_intensity_dict
+
 
 def process_data(filepath, mass_list, remove_prefix='', convert_well_names=True):
     dict_of_dfs = load_data(filepath)
@@ -67,7 +69,7 @@ if __name__ == '__main__':
     from glycomass.mass_list import load_mass_list
 
     mass_list = load_mass_list()
-    filepath = str(Path(__file__).parents[0]) + '/data/test_data.xlsx'
+    filepath = str(Path(__file__).parents[1]) + '/data/test_run/mass list row a b and c.xlsx'
     prefix = "Itag_assay_spot_"
     df = process_data(filepath, mass_list, remove_prefix=prefix)
 

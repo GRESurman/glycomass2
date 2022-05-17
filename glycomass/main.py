@@ -13,6 +13,6 @@ def run(folder_path, cols=cols, remove_prefix="", linkage='ward', distance_thres
     df.to_excel(f"{folder_path}/result/processed_results.xlsx")
 
 if __name__ == '__main__':
-    folder_path = str(Path(__file__).parents[1]) + '/data/01Mar22'
+    folder_path = str(Path(__file__).parents[1]) + '/data/16Mar22'
     run(folder_path)
 
