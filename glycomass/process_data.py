@@ -25,7 +25,10 @@ def get_intensity_ratios(intensity_dict, round_to=4):
     sum_intensity = sum(list(intensity_dict.values()))
     ratio_intensity_dict = {}
     for key, value in intensity_dict.items():
-        ratio_intensity_dict[key] = round(value/sum_intensity, round_to)
+        if sum_intensity == 0:
+            ratio_intensity_dict[key] = 0
+        else:
+            ratio_intensity_dict[key] = round(value/sum_intensity, round_to)
 
     ratio_intensity_dict['sum_1_2_3'] = round(sum([ratio_intensity_dict['1'], ratio_intensity_dict['2'], ratio_intensity_dict['3']]), round_to)
 
