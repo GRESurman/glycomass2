@@ -1,7 +1,7 @@
 import pandas as pd
 from pathlib import Path
 
-default_mass_list = f'{str(Path(__file__).parents[0])}/mass_list.xlsx'
+default_mass_list = f'{str(Path(__file__).parents[0])}/mass_list2.xlsx'
 
 def load_mass_list(filename=default_mass_list):
     df = pd.read_excel(filename)
